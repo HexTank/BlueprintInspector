@@ -1,0 +1,64 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Baseline. Everything under this directory is CRLF in the working tree, and C++ layout is delegated to
+# .clang-format, which sets ColumnLimit: 0 - so the editor must not wrap either.
+[*]
+charset = utf-8
+end_of_line = crlf
+indent_style = tab
+indent_size = 4
+tab_width = 4
+trim_trailing_whitespace = false
+max_line_length = off
+cpp_indent_lambda_braces_when_parameter = true
+
+# ReSharper properties
+resharper_cpp_keep_user_linebreaks = true
+resharper_cpp_wrap_lines = true
+resharper_cpp_wrap_before_colon = true
+resharper_cpp_line_break_before_comma_in_member_initializer_lists = true
+
+# MSBuild
+[*.{csproj,proj,projitems,shproj,fsproj,target,props}]
+indent_style = space
+indent_size = 2
+
+# XML config files
+[*.{config,nuspec,resx,natvis}]
+indent_style = space
+indent_size = 2
+
+# Python files
+[*.py]
+indent_style = space
+indent_size = 4
+
+# YAML files
+[*.yaml]
+indent_style = space
+indent_size = 2
+
+# The VS Code front end is TypeScript/JSON and the Windows entry points are batch: both are space-indented,
+# which the tab rule in `[*]` above would otherwise claim. These types also stay LF (see .gitattributes at the
+# repo root): they are read by Node and VS Code rather than only by Windows tools.
+[*.{ts,tsx,js,mjs,json,jsonc,md}]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+
+[*.{bat,cmd}]
+indent_style = space
+indent_size = 2
+
+# Settings for Verse source files
+[*.{verse,versetest}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+max_line_length = off
+
+# Copyright
+file_header_template =// Copyright (c) 2024-2026 Paul Tankard

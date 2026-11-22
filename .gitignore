@@ -1,0 +1,29 @@
+# This repository is the BlueprintInspector plugin. The development host project and every engine
+# generation directory live outside it, next to the checkout.
+
+/.vs/
+/.idea/
+/.vsconfig
+/Binaries/
+/Build/
+/DerivedDataCache/
+/Intermediate/
+/Saved/
+/*.sln
+/*.slnx
+/*.sln.DotSettings.user
+/*.uproject
+/output.txt
+
+# The active fixture set is copied from Fixtures/<engine>/ by Build.ps1. The graph archive under
+# Content/Tests/OpcodeShowcase/Graphs stays tracked; only the generated .uasset files are ignored.
+Content/Tests/OpcodeShowcase/*.uasset
+
+# VS Code extension build output. The launch and task configurations are tracked so a fresh
+# clone offers "Launch Extension" in the Run view.
+VSCodeExtension/Extension/.vscode/*
+!VSCodeExtension/Extension/.vscode/launch.json
+!VSCodeExtension/Extension/.vscode/tasks.json
+VSCodeExtension/Extension/node_modules/
+VSCodeExtension/Extension/out/
+VSCodeExtension/Extension/*.vsix

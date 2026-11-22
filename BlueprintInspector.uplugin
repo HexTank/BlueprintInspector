@@ -1,0 +1,28 @@
+{
+	"FileVersion": 3,
+	"Version": 2,
+	"VersionName": "2.0.2",
+	"FriendlyName": "BlueprintInspector",
+	"Description": "A Blueprint inspector and debugger for Unreal Engine. Disassembles Blueprint bytecode into readable pseudo-source and serves it over DAP so you can set breakpoints, step and inspect variables from VS Code.",
+	"Category": "Editor",
+	"CreatedBy": "Paul Tankard",
+	"CreatedByURL": "https://github.com/HexTank",
+	"DocsURL": "https://github.com/HexTank/BlueprintInspector#readme",
+	"MarketplaceURL": "https://marketplace.visualstudio.com/items?itemName=HexTank.blueprint-inspector",
+	"SupportURL": "https://github.com/HexTank/BlueprintInspector/issues",
+	"CanContainContent": true,
+	"IsBetaVersion": true,
+	"SupportedTargetPlatforms": [
+		"Win64"
+	],
+	"Modules": [
+		{
+			"Name": "BlueprintInspector",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"Win64"
+			]
+		}
+	]
+}

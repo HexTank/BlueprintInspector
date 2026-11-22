@@ -1,0 +1,36 @@
+UseTab: Never
+IndentWidth: 4
+AccessModifierOffset: -4
+PointerAlignment: Left
+# Allman, spelled out as Custom rather than the named style solely so lambdas can opt out: Allman also
+# puts a lambda body's opening brace on its own aligned column and then merges the closing brace into the
+# last statement (`return X; });`), which is unreadable. Every other brace keeps Allman placement.
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: Always
+  AfterEnum: true
+  AfterExternBlock: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  AfterUnion: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: false
+  BeforeWhile: false
+AllowShortIfStatementsOnASingleLine: false
+IndentCaseLabels: false
+# No column limit: the codebase is laid out by hand rather than reflowed to a width.
+ColumnLimit: 0
+SortIncludes: true
+IncludeCategories:
+  - Regex: '^"CoreMinimal\.h"$'
+    Priority: 1
+  - Regex: '^<'
+    Priority: 3
+  - Regex: '\.generated\.h"$'
+    Priority: 4
+  - Regex: '.*'
+    Priority: 2

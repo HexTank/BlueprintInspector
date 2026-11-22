@@ -1,0 +1,113 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Extension manifest version to build, without the v (for example 1.0.3)
+        required: true
+      publish:
+        description: Create the GitHub release for this version
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  version:
+    name: Version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.read.outputs.version }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Read and check the version
+        id: read
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            version="${{ inputs.version }}"
+          else
+            version="${GITHUB_REF_NAME#v}"
+          fi
+          manifest="$(jq -r .version VSCodeExtension/Extension/package.json)"
+          if [ "$manifest" != "$version" ]; then
+            echo "::error::The tag/input version '$version' does not match the extension manifest '$manifest'."
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+  vsix:
+    name: VSIX
+    needs: version
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: VSCodeExtension/Extension
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: VSCodeExtension/Extension/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Compile and package
+        run: npm run package:vsix
+      - name: Upload the VSIX
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-vsix
+          path: VSCodeExtension/Extension/*.vsix
+          if-no-files-found: error
+
+  plugin-zip:
+    name: Plugin zip
+    needs: version
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Stage and zip the plugin
+        shell: pwsh
+        run: ./Scripts/New-PluginPackage.ps1 -Version "${{ needs.version.outputs.version }}" -OutputDirectory "${{ runner.temp }}"
+      - name: Upload the plugin zip
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-plugin-zip
+          path: ${{ runner.temp }}/*.zip
+          if-no-files-found: error
+
+  release:
+    name: GitHub release
+    needs: [version, vsix, plugin-zip]
+    if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.publish)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Download the artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', inputs.version) || github.ref_name }}
+        run: |
+          ls -l dist
+          # A tag can already have a release: the release created for v1.9.0 outlived its workflow run,
+          # and a plain create made every re-run fail with "a release with the same tag name already
+          # exists" after the artifacts had built. Upload over it instead.
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG exists; replacing its assets."
+            gh release upload "$TAG" dist/* --clobber
+          else
+            gh release create "$TAG" dist/* --generate-notes --title "BlueprintInspector $TAG" --target "$GITHUB_SHA"
+          fi

@@ -1,0 +1,605 @@
+# BlueprintInspector pseudo-source line map golden.
+# Regenerate with -BlueprintGoldenUpdate, then review the diff before committing.
+# Each section lists "line|kind[|Function@Address]" for one rendered function.
+===== arrayconst_paramdefault =====
+1|none
+2|none
+3|statement|arrayconst_paramdefault@25
+4|none
+===== call_selfarg =====
+1|none
+2|none
+3|statement|call_selfarg@3
+4|none
+===== callmath_abs_int =====
+1|none
+2|none
+3|statement|callmath_abs_int@2
+4|statement|callmath_abs_int@36
+5|none
+===== callmath_add =====
+1|none
+2|none
+3|statement|callmath_add@2
+4|statement|callmath_add@49
+5|none
+===== cast_crossinterface =====
+1|none
+2|none
+3|statement|cast_crossinterface@3
+4|statement|cast_crossinterface@39
+5|statement|cast_crossinterface@69
+6|none
+7|statement|cast_crossinterface@85
+8|none
+9|none
+===== cast_float_double =====
+1|none
+2|none
+3|statement|cast_float_double@3
+4|statement|cast_float_double@33
+5|statement|cast_float_double@62
+6|none
+===== cast_impure =====
+1|none
+2|none
+3|statement|cast_impure@3
+4|statement|cast_impure@39
+5|statement|cast_impure@69
+6|none
+7|statement|cast_impure@111
+8|none
+9|none
+10|none
+11|statement|cast_impure@85
+12|none
+13|none
+===== cast_interface_to_object =====
+1|none
+2|none
+3|statement|cast_interface_to_object@3
+4|statement|cast_interface_to_object@39
+5|statement|cast_interface_to_object@69
+6|none
+7|statement|cast_interface_to_object@85
+8|none
+9|none
+===== cast_metacast =====
+1|none
+2|none
+3|statement|cast_metacast@3
+4|statement|cast_metacast@39
+5|statement|cast_metacast@69
+6|none
+7|statement|cast_metacast@85
+8|none
+9|none
+===== cast_objecttointerface =====
+1|none
+2|none
+3|statement|cast_objecttointerface@3
+4|statement|cast_objecttointerface@39
+5|statement|cast_objecttointerface@69
+6|none
+7|statement|cast_objecttointerface@85
+8|none
+9|none
+===== cast_pure =====
+1|none
+2|none
+3|statement|cast_pure@3
+4|statement|cast_pure@39
+5|statement|cast_pure@69
+6|none
+7|statement|cast_pure@85
+8|none
+9|none
+===== classcontext_getclassdefaults =====
+1|none
+2|none
+3|statement|classcontext_getclassdefaults@3
+4|none
+===== const_byte =====
+1|none
+2|none
+3|statement|const_byte@25
+4|none
+===== const_double =====
+1|none
+2|none
+3|statement|const_double@25
+4|none
+===== const_float =====
+1|none
+2|none
+3|statement|const_float@3
+4|none
+===== const_int =====
+1|none
+2|none
+3|statement|const_int@25
+4|none
+===== const_int64 =====
+1|none
+2|none
+3|statement|const_int64@25
+4|none
+===== const_name =====
+1|none
+2|none
+3|statement|const_name@25
+4|none
+===== const_object =====
+1|none
+2|none
+3|statement|const_object@3
+4|none
+===== const_rotator =====
+1|none
+2|none
+3|statement|const_rotator@25
+4|none
+===== const_softobject =====
+1|none
+2|none
+3|statement|const_softobject@25
+4|none
+===== const_string_ascii =====
+1|none
+2|none
+3|statement|const_string_ascii@25
+4|none
+===== const_string_unicode =====
+1|none
+2|none
+3|statement|const_string_unicode@25
+4|none
+===== const_struct =====
+1|none
+2|none
+3|statement|const_struct@25
+4|none
+===== const_text_localized =====
+1|none
+2|none
+3|statement|const_text_localized@25
+4|none
+===== const_transform =====
+1|none
+2|none
+3|statement|const_transform@25
+4|none
+===== const_vector =====
+1|none
+2|none
+3|statement|const_vector@25
+4|none
+===== context_failsilent =====
+1|none
+2|none
+3|statement|context_failsilent@25
+4|none
+===== context_getactorlocation =====
+1|none
+2|none
+3|statement|context_getactorlocation@2
+4|statement|context_getactorlocation@53
+5|none
+===== context_output_lvalue =====
+1|none
+2|none
+3|statement|context_output_lvalue@3
+4|none
+===== delegate_addelegate =====
+1|none
+2|none
+3|statement|delegate_addelegate@2
+4|statement|delegate_addelegate@26
+5|none
+===== delegate_callmulticast =====
+1|none
+2|none
+3|statement|delegate_callmulticast@3
+4|none
+===== delegate_cleardelegate =====
+1|none
+2|none
+3|statement|delegate_cleardelegate@3
+4|none
+===== delegate_createdelegate =====
+1|none
+2|none
+3|statement|delegate_createdelegate@2
+4|statement|delegate_createdelegate@26
+5|none
+===== delegate_instance =====
+1|none
+2|none
+3|statement|delegate_instance@25
+4|none
+===== delegate_removedelegate =====
+1|none
+2|none
+3|statement|delegate_removedelegate@2
+4|statement|delegate_removedelegate@26
+5|none
+===== E_Any =====
+1|none
+2|none
+3|statement|E_Any@3
+4|none
+===== E_WithDataOut =====
+1|none
+2|none
+3|statement|E_WithDataOut@3
+4|statement|E_WithDataOut@23
+5|none
+===== F_finalcall_parent =====
+1|none
+2|none
+3|statement|F_finalcall_parent@3
+4|none
+===== flow_arraygetbyref =====
+1|none
+2|none
+3|statement|flow_arraygetbyref@3
+4|none
+===== flow_branch =====
+1|none
+2|none
+3|statement|flow_branch@4
+4|none
+5|statement|flow_branch@50
+6|none
+7|none
+8|none
+9|statement|flow_branch@20
+10|none
+11|none
+===== flow_break =====
+1|none
+2|none
+3|statement|flow_break@3
+4|statement|flow_break@28
+5|statement|flow_break@42
+6|none
+7|statement|flow_break@57
+8|statement|flow_break@100
+9|statement|flow_break@128
+10|statement|flow_break@164
+11|none
+12|statement|flow_break@184
+13|statement|flow_break@219
+14|none
+15|none
+16|none
+17|transfer|flow_break@179->244
+18|none
+19|none
+20|none
+===== flow_continue =====
+1|none
+2|none
+3|statement|flow_continue@3
+4|statement|flow_continue@28
+5|statement|flow_continue@42
+6|none
+7|statement|flow_continue@57
+8|statement|flow_continue@100
+9|statement|flow_continue@128
+10|statement|flow_continue@164
+11|none
+12|statement|flow_continue@184
+13|statement|flow_continue@219
+14|none
+15|none
+16|none
+17|transfer|flow_continue@179->40
+18|none
+19|none
+20|none
+===== flow_do_while =====
+1|none
+2|none
+3|statement|flow_do_while@3
+4|none
+5|none
+6|statement|flow_do_while@27
+7|statement|flow_do_while@70
+8|statement|flow_do_while@98
+9|statement|flow_do_while@133
+10|none
+11|statement|flow_do_while@155
+12|none
+===== flow_nested_loops =====
+1|none
+2|none
+3|statement|flow_nested_loops@3
+4|statement|flow_nested_loops@28
+5|statement|flow_nested_loops@42
+6|none
+7|statement|flow_nested_loops@58
+8|statement|flow_nested_loops@72
+9|none
+10|statement|flow_nested_loops@87
+11|statement|flow_nested_loops@130
+12|statement|flow_nested_loops@158
+13|statement|flow_nested_loops@194
+14|none
+15|statement|flow_nested_loops@232
+16|statement|flow_nested_loops@268
+17|none
+18|transfer|flow_nested_loops@268->70
+19|none
+20|none
+21|none
+22|transfer|flow_nested_loops@283->214
+23|none
+24|none
+25|none
+26|none
+27|transfer|flow_nested_loops@209->70
+28|none
+29|none
+30|statement|flow_nested_loops@215
+31|none
+32|none
+===== flow_popexecutionflowifnot =====
+1|none
+2|none
+3|sequence|flow_popexecutionflowifnot@28
+4|statement|flow_popexecutionflowifnot@28
+5|sequence|flow_popexecutionflowifnot@23
+6|statement|flow_popexecutionflowifnot@23
+7|none
+8|none
+9|sequence|flow_popexecutionflowifnot@53
+10|none
+===== flow_return_value =====
+1|none
+2|none
+3|statement|flow_return_value@3
+4|statement|flow_return_value@28
+5|none
+===== flow_sequence =====
+1|none
+2|none
+3|sequence|flow_sequence@48
+4|statement|flow_sequence@48
+5|sequence|flow_sequence@22
+6|statement|flow_sequence@22
+7|sequence|flow_sequence@73
+8|none
+===== flow_switch =====
+1|none
+2|none
+3|statement|flow_switch@3
+4|statement|flow_switch@38
+5|none
+6|statement|flow_switch@137
+7|none
+8|none
+9|none
+10|statement|flow_switch@52
+11|statement|flow_switch@87
+12|none
+13|statement|flow_switch@171
+14|none
+15|none
+16|none
+17|statement|flow_switch@103
+18|none
+19|none
+20|none
+===== flow_switchvalue =====
+1|none
+2|none
+3|statement|flow_switchvalue@2
+4|statement|flow_switchvalue@25
+5|statement|flow_switchvalue@48
+6|statement|flow_switchvalue@76
+7|sub|flow_switchvalue@76
+8|sub|flow_switchvalue@76
+9|sub|flow_switchvalue@76
+10|sub|flow_switchvalue@76
+11|sub|flow_switchvalue@76
+12|sub|flow_switchvalue@76
+13|sub|flow_switchvalue@76
+14|sub|flow_switchvalue@76
+15|sub|flow_switchvalue@76
+16|sub|flow_switchvalue@76
+17|sub|flow_switchvalue@76
+18|none
+===== flow_while =====
+1|none
+2|none
+3|statement|flow_while@3
+4|statement|flow_while@27
+5|none
+6|statement|flow_while@78
+7|statement|flow_while@121
+8|none
+9|none
+===== interfacecontext_messagecall =====
+1|none
+2|none
+3|statement|interfacecontext_messagecall@2
+4|statement|interfacecontext_messagecall@32
+5|statement|interfacecontext_messagecall@68
+6|statement|interfacecontext_messagecall@98
+7|none
+8|statement|interfacecontext_messagecall@137
+9|none
+10|none
+===== let_array =====
+1|none
+2|none
+3|statement|let_array@2
+4|statement|let_array@24
+5|none
+===== let_bool =====
+1|none
+2|none
+3|statement|let_bool@3
+4|none
+===== let_byte =====
+1|none
+2|none
+3|statement|let_byte@3
+4|none
+===== let_class =====
+1|none
+2|none
+3|statement|let_class@3
+4|none
+===== let_delegate =====
+1|none
+2|none
+3|statement|let_delegate@2
+4|statement|let_delegate@26
+5|none
+===== let_enum =====
+1|none
+2|none
+3|statement|let_enum@3
+4|none
+===== let_int =====
+1|none
+2|none
+3|statement|let_int@3
+4|none
+===== let_int64 =====
+1|none
+2|none
+3|statement|let_int64@3
+4|none
+===== let_name =====
+1|none
+2|none
+3|statement|let_name@3
+4|none
+===== let_obj =====
+1|none
+2|none
+3|statement|let_obj@3
+4|none
+===== let_real =====
+1|none
+2|none
+3|statement|let_real@3
+4|none
+===== let_rotator =====
+1|none
+2|none
+3|statement|let_rotator@3
+4|none
+===== let_softobj =====
+1|none
+2|none
+3|statement|let_softobj@3
+4|none
+===== let_string_ascii =====
+1|none
+2|none
+3|statement|let_string_ascii@3
+4|none
+===== let_string_unicode =====
+1|none
+2|none
+3|statement|let_string_unicode@3
+4|none
+===== let_struct =====
+1|none
+2|none
+3|statement|let_struct@3
+4|none
+===== let_text =====
+1|none
+2|none
+3|statement|let_text@3
+4|none
+===== let_transform =====
+1|none
+2|none
+3|statement|let_transform@3
+4|none
+===== let_vector =====
+1|none
+2|none
+3|statement|let_vector@3
+4|none
+===== let_weakobj =====
+1|none
+2|none
+3|statement|let_weakobj@3
+4|none
+===== localfinal_bpfunc =====
+1|none
+2|none
+3|statement|localfinal_bpfunc@3
+4|none
+===== localvirtual_bpfunc =====
+1|none
+2|none
+3|statement|localvirtual_bpfunc@3
+4|none
+===== none_interface =====
+1|none
+2|none
+3|statement|none_interface@3
+4|none
+===== none_object =====
+1|none
+2|none
+3|statement|none_object@3
+4|none
+===== self_node =====
+1|none
+2|none
+3|statement|self_node@3
+4|none
+===== setarray_makearray =====
+1|none
+2|none
+3|statement|setarray_makearray@2
+4|statement|setarray_makearray@24
+5|none
+===== setmap_makemap =====
+1|none
+2|none
+3|statement|setmap_makemap@2
+4|statement|setmap_makemap@54
+5|none
+===== setset_makeset =====
+1|none
+2|none
+3|statement|setset_makeset@2
+4|statement|setset_makeset@44
+5|none
+===== structconst_containers =====
+1|none
+2|none
+3|statement|structconst_containers@25
+4|none
+===== var_instance =====
+1|none
+2|none
+3|statement|var_instance@3
+4|none
+===== var_local =====
+1|none
+2|none
+3|statement|var_local@3
+4|none
+===== var_localout =====
+1|none
+2|none
+3|statement|var_localout@3
+4|statement|var_localout@28
+5|none
+===== virtual_function =====
+1|none
+2|none
+3|statement|virtual_function@2
+4|statement|virtual_function@35
+5|none

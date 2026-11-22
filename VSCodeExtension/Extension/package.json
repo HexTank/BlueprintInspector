@@ -1,0 +1,367 @@
+{
+  "name": "blueprint-inspector",
+  "displayName": "Blueprint Inspector",
+  "publisher": "HexTank",
+  "author": "Paul Tankard",
+  "version": "2.0.2",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HexTank/BlueprintInspector.git",
+    "directory": "VSCodeExtension/Extension"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "main": "./out/extension.js",
+  "categories": [
+    "Debuggers"
+  ],
+  "keywords": [
+    "unreal",
+    "unreal engine",
+    "blueprint",
+    "debugger",
+    "dap",
+    "ue4",
+    "ue5"
+  ],
+  "icon": "icon.png",
+  "activationEvents": [
+    "onDebug",
+    "onView:blueprintInspector.hotPaths",
+    "onView:blueprintInspector.audit",
+    "onView:blueprintInspector.coverage",
+    "onView:blueprintInspector.snapshotDiff",
+    "onCommand:blueprintInspector.startGameAndAttach",
+    "onCommand:blueprintInspector.runAudit",
+    "onCommand:blueprintInspector.exportAudit",
+    "onCommand:blueprintInspector.refreshCoverage",
+    "onCommand:blueprintInspector.exportCoverageJson",
+    "onCommand:blueprintInspector.exportCoverageLcov",
+    "onCommand:blueprintInspector.saveSnapshot",
+    "onCommand:blueprintInspector.compareSnapshot",
+    "onCommand:blueprint-inspector.openBlueprint",
+    "onCommand:blueprintInspector.startCapture",
+    "onCommand:blueprintInspector.stopCapture",
+    "onCommand:blueprintInspector.resetCapture",
+    "onCommand:blueprintInspector.refreshHotLines",
+    "workspaceContains:**/*.uproject"
+  ],
+  "contributes": {
+    "debuggers": [
+      {
+        "type": "blueprint-inspector",
+        "label": "Blueprint Inspector"
+      }
+    ],
+    "views": {
+      "debug": [
+        {
+          "id": "blueprintInspector.hotPaths",
+          "name": "Hot Paths"
+        },
+        {
+          "id": "blueprintInspector.audit",
+          "name": "Audit"
+        },
+        {
+          "id": "blueprintInspector.coverage",
+          "name": "Coverage"
+        },
+        {
+          "id": "blueprintInspector.snapshotDiff",
+          "name": "Hot Path Diff"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "blueprintInspector.hotPaths",
+        "contents": "No hot paths yet.\nStart a capture, or [resolve all loaded blueprints](command:blueprintInspector.resolveAllHotPaths) to fill this view.\n[Start Capture](command:blueprintInspector.startCapture)"
+      },
+      {
+        "view": "blueprintInspector.audit",
+        "contents": "Run a pre-ship audit of the Blueprint classes in this session.\n[Run Audit](command:blueprintInspector.runAudit)"
+      },
+      {
+        "view": "blueprintInspector.coverage",
+        "contents": "Capture a run to see which Blueprint statements never executed.\n[Refresh Coverage](command:blueprintInspector.refreshCoverage)\n[Resolve All Blueprints](command:blueprintInspector.resolveAllHotPaths)"
+      },
+      {
+        "view": "blueprintInspector.snapshotDiff",
+        "contents": "Save a capture and compare a later run against it to see what moved.\n[Save Capture Snapshot](command:blueprintInspector.saveSnapshot)\n[Compare With Snapshot](command:blueprintInspector.compareSnapshot)"
+      }
+    ],
+    "commands": [
+      {
+        "command": "blueprintInspector.goToVariable",
+        "title": "Blueprint Inspector: Go to Variable…"
+      },
+      {
+        "command": "blueprintInspector.startGameAndAttach",
+        "title": "Blueprint Inspector: Start Game and Attach"
+      },
+      {
+        "command": "blueprint-inspector.openBlueprint",
+        "title": "Blueprint Inspector: Open Blueprint"
+      },
+      {
+        "command": "blueprintInspector.startCapture",
+        "title": "Blueprint Inspector: Start Capture",
+        "icon": "$(record)"
+      },
+      {
+        "command": "blueprintInspector.stopCapture",
+        "title": "Blueprint Inspector: Stop Capture",
+        "icon": "$(debug-stop)"
+      },
+      {
+        "command": "blueprintInspector.resetCapture",
+        "title": "Blueprint Inspector: Reset Capture",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "blueprintInspector.refreshHotLines",
+        "title": "Blueprint Inspector: Refresh Hot Lines",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "blueprintInspector.resolveAllHotPaths",
+        "title": "Blueprint Inspector: Resolve All Blueprints for Hot Paths",
+        "icon": "$(list-flat)"
+      },
+      {
+        "command": "blueprintInspector.runAudit",
+        "title": "Blueprint Inspector: Run Audit",
+        "icon": "$(checklist)"
+      },
+      {
+        "command": "blueprintInspector.exportAudit",
+        "title": "Blueprint Inspector: Export Audit Report",
+        "icon": "$(export)"
+      },
+      {
+        "command": "blueprintInspector.refreshCoverage",
+        "title": "Blueprint Inspector: Refresh Coverage",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "blueprintInspector.exportCoverageJson",
+        "title": "Blueprint Inspector: Export Coverage (JSON)",
+        "icon": "$(export)"
+      },
+      {
+        "command": "blueprintInspector.exportCoverageLcov",
+        "title": "Blueprint Inspector: Export Coverage (LCOV)",
+        "icon": "$(export)"
+      },
+      {
+        "command": "blueprintInspector.toggleCoverageUncoveredOnly",
+        "title": "Blueprint Inspector: Show Only Uncovered Statements",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "blueprintInspector.saveSnapshot",
+        "title": "Blueprint Inspector: Save Capture Snapshot",
+        "icon": "$(save)"
+      },
+      {
+        "command": "blueprintInspector.compareSnapshot",
+        "title": "Blueprint Inspector: Compare Capture With Snapshot",
+        "icon": "$(diff)"
+      },
+      {
+        "command": "blueprintInspector.clearSnapshotDiff",
+        "title": "Blueprint Inspector: Clear Capture Diff",
+        "icon": "$(clear-all)"
+      }
+    ],
+    "menus": {
+      "debug/toolBar": [
+        {
+          "command": "blueprintInspector.startCapture",
+          "when": "debugType == 'blueprint-inspector' && !blueprintInspector.capturing",
+          "group": "navigation@10"
+        },
+        {
+          "command": "blueprintInspector.stopCapture",
+          "when": "debugType == 'blueprint-inspector' && blueprintInspector.capturing",
+          "group": "navigation@10"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "blueprintInspector.startCapture",
+          "when": "inDebugMode && debugType == 'blueprint-inspector'"
+        },
+        {
+          "command": "blueprintInspector.stopCapture",
+          "when": "inDebugMode && debugType == 'blueprint-inspector'"
+        },
+        {
+          "command": "blueprintInspector.resetCapture",
+          "when": "inDebugMode && debugType == 'blueprint-inspector'"
+        },
+        {
+          "command": "blueprintInspector.refreshHotLines",
+          "when": "inDebugMode && debugType == 'blueprint-inspector'"
+        },
+        {
+          "command": "blueprintInspector.resolveAllHotPaths",
+          "when": "inDebugMode && debugType == 'blueprint-inspector'"
+        },
+        {
+          "command": "blueprintInspector.runAudit",
+          "when": "inDebugMode && debugType == 'blueprint-inspector'"
+        },
+        {
+          "command": "blueprintInspector.exportAudit",
+          "when": "inDebugMode && debugType == 'blueprint-inspector'"
+        },
+        {
+          "command": "blueprintInspector.refreshCoverage",
+          "when": "inDebugMode && debugType == 'blueprint-inspector'"
+        },
+        {
+          "command": "blueprintInspector.exportCoverageJson",
+          "when": "inDebugMode && debugType == 'blueprint-inspector'"
+        },
+        {
+          "command": "blueprintInspector.exportCoverageLcov",
+          "when": "inDebugMode && debugType == 'blueprint-inspector'"
+        },
+        {
+          "command": "blueprintInspector.toggleCoverageUncoveredOnly",
+          "when": "inDebugMode && debugType == 'blueprint-inspector'"
+        },
+        {
+          "command": "blueprintInspector.saveSnapshot",
+          "when": "inDebugMode && debugType == 'blueprint-inspector'"
+        },
+        {
+          "command": "blueprintInspector.compareSnapshot",
+          "when": "inDebugMode && debugType == 'blueprint-inspector'"
+        },
+        {
+          "command": "blueprintInspector.clearSnapshotDiff",
+          "when": "inDebugMode && debugType == 'blueprint-inspector'"
+        }
+      ],
+      "views/title": [
+        {
+          "command": "blueprintInspector.resolveAllHotPaths",
+          "when": "view == blueprintInspector.hotPaths",
+          "group": "navigation@1"
+        },
+        {
+          "command": "blueprintInspector.refreshHotLines",
+          "when": "view == blueprintInspector.hotPaths",
+          "group": "navigation@2"
+        },
+        {
+          "command": "blueprintInspector.runAudit",
+          "when": "view == blueprintInspector.audit",
+          "group": "navigation@1"
+        },
+        {
+          "command": "blueprintInspector.exportAudit",
+          "when": "view == blueprintInspector.audit",
+          "group": "navigation@2"
+        },
+        {
+          "command": "blueprintInspector.refreshCoverage",
+          "when": "view == blueprintInspector.coverage",
+          "group": "navigation@1"
+        },
+        {
+          "command": "blueprintInspector.toggleCoverageUncoveredOnly",
+          "when": "view == blueprintInspector.coverage",
+          "group": "navigation@2"
+        },
+        {
+          "command": "blueprintInspector.exportCoverageJson",
+          "when": "view == blueprintInspector.coverage",
+          "group": "navigation@3"
+        },
+        {
+          "command": "blueprintInspector.exportCoverageLcov",
+          "when": "view == blueprintInspector.coverage",
+          "group": "navigation@4"
+        },
+        {
+          "command": "blueprintInspector.saveSnapshot",
+          "when": "view == blueprintInspector.snapshotDiff",
+          "group": "navigation@1"
+        },
+        {
+          "command": "blueprintInspector.compareSnapshot",
+          "when": "view == blueprintInspector.snapshotDiff",
+          "group": "navigation@2"
+        },
+        {
+          "command": "blueprintInspector.clearSnapshotDiff",
+          "when": "view == blueprintInspector.snapshotDiff",
+          "group": "navigation@3"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "blueprintInspector.refreshHotLines",
+          "when": "resourceScheme == blueprint-source",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Blueprint Inspector",
+      "properties": {
+        "blueprintInspector.tokenFile": {
+          "type": "string",
+          "default": "",
+          "description": "Path to Saved/BlueprintInspector/dap-token when the game writes it somewhere unexpected. Leave empty to use %LOCALAPPDATA%\\BlueprintInspector\\dap-token and the copies next to the workspace."
+        },
+        "blueprintInspector.gameExecutable": {
+          "type": "string",
+          "scope": "machine",
+          "default": "",
+          "description": "Packaged game executable that Start Game and Attach launches when no game is listening. Leave empty to attach to a game that is already running."
+        },
+        "blueprintInspector.gameArguments": {
+          "type": "string",
+          "scope": "machine",
+          "default": "-windowed -resx=1280 -resy=720",
+          "description": "Command line passed to the packaged game when Start Game and Attach launches it."
+        },
+        "blueprintInspector.resolveAllOnCapture": {
+          "type": "boolean",
+          "default": true,
+          "description": "Render every loaded Blueprint when a capture starts so the Hot Paths view resolves lines for classes you have not opened. Turn off to resolve only on demand."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "test": "npm run compile && node --test test/snapshot.test.js test/coverage.test.js test/symbols.test.js test/settings.test.js",
+    "watch": "tsc -watch -p ./",
+    "package:vsix": "vsce package --no-dependencies",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^6.0.3",
+    "@vscode/vsce": "^3.6.0"
+  },
+  "description": "Debug Unreal Engine Blueprints: breakpoints, stepping, variables and opt-in hot-path hit counts over DAP.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HexTank/BlueprintInspector.git"
+  },
+  "homepage": "https://github.com/HexTank/BlueprintInspector#readme",
+  "bugs": {
+    "url": "https://github.com/HexTank/BlueprintInspector/issues"
+  },
+  "license": "MIT"
+}

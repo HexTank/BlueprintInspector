@@ -1,0 +1,54 @@
+# Line endings and text/binary classification.
+#
+# `text=auto` normalises every text file to LF in the index and lets git sniff the binary ones - the PNG
+# icon and the images under Content that carry a .tmp extension. What a checkout then writes is decided
+# by the rules below, so it stops depending on each developer's core.autocrlf setting.
+* text=auto
+
+# Epic's own rules, copied from the engine's .gitattributes: cmd needs CRLF for labels to work when a
+# script crosses a 512-byte block boundary, and shell scripts have to stay LF.
+*.bat text eol=crlf
+*.sh  text eol=lf
+
+# Config files are LF.
+.gitattributes text eol=lf
+.editorconfig  text eol=lf
+.gitignore     text eol=lf
+
+# Documentation and the Node tooling are read on every platform, so they stay LF.
+*.md text eol=lf
+*.py text eol=lf
+
+# JSON, TypeScript and the VS Code launch files are consumed by Node and VS Code rather than by Windows
+# tools, so they are LF too.
+*.json  text eol=lf
+*.jsonc text eol=lf
+*.ts    text eol=lf
+*.tsx   text eol=lf
+*.js    text eol=lf
+*.mjs   text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+
+# C++ and C# are CRLF everywhere in this project, matching .editorconfig at the root.
+*.h   text eol=crlf
+*.cpp text eol=crlf
+*.inl text eol=crlf
+*.cs  text eol=crlf
+
+# Windows-authored project descriptors and solution files.
+*.uproject text eol=crlf
+*.uplugin  text eol=crlf
+*.sln      text eol=crlf
+*.vcxproj  text eol=crlf
+*.vcxproj.filters text eol=crlf
+
+# Never treat these as text, whatever their contents look like.
+*.png binary
+*.tmp binary
+
+# Unreal asset packages and their sidecars.
+*.uasset binary
+*.umap binary
+*.uexp binary
+*.ubulk binary

@@ -1,0 +1,72 @@
+# clang-tidy configuration for the BlueprintInspector plugin.
+#
+# Scope is the plugin's own translation units: HeaderFilterRegex keeps diagnostics out of the engine, out
+# of UBT-generated headers, and out of the vendored cppdap/detours headers under Source/ThirdParty - those
+# are third-party code and are not ours to change. The checks that a measured run on this codebase showed
+# to be noise are disabled - bugprone-reserved-identifier fires on UBT's generated Definitions.h
+# (_UNICODE, __UNREAL__),
+# performance-enum-size fires on the enum expanded from UE's own IMPLEMENT_MODULE macro,
+# performance-noexcept-move-constructor fires on the move members that GENERATED_BODY emits for a UCLASS,
+# and performance-noexcept-destructor crashes clang-tidy 19.1.5 while matching FModuleInfo in the engine's
+# ModuleManager.h. performance-unnecessary-value-param fires on the InputParam1 parameter that UBT's
+# DEFINE_LATENT_AUTOMATION_COMMAND_* macros generate for the latent test commands: that signature is the
+# macro's, not ours, and there is nothing to move. modernize-use-nullptr crashes clang-tidy 19.1.5 with an
+# access violation on the plugin's TUs, so it is not enabled.
+#
+# UE 5.5 and later headers require C++20 (they use concepts and char8_t), so ExtraArgs pins C++20: a
+# younger standard cannot parse the engine at all. To check the plugin at the oldest language level it
+# supports, generate the database from a UE 4.25 host and override with /std:c++17. Use the clang-cl
+# spelling; the GNU spelling -std=c++20 is rejected when the compile command is clang-cl.
+#
+#
+#   Engine\Build\BatchFiles\Build.bat -Mode=GenerateClangDatabase ^
+#       -Project="<repo>\<Project>.uproject" <Project>Editor Win64 DebugGame
+#
+# Then expand each entry before analysis. UBT writes the arguments as `clang-cl.exe @<TU>.rsp`, and the
+# response file already names the source; clang-tidy appends the translation unit it is given, so a raw
+# entry makes clang-cl see two sources and refuse /Fo. Expand the response files (including the nested
+# BlueprintInspector.Shared.rsp), drop /Fo, /experimental:log and /sourceDependencies with their values,
+# and drop /dximplicitlyinstantiatevirtualfunction-, which clang-cl reads as an input file. Keep the
+# translation unit in the arguments; clang-tidy rewrites it in place.
+#
+#   clang-tidy.exe -p "<directory with compile_commands.json>" ^
+#       --extra-arg=-Wno-invalid-constexpr "<plugin source>.cpp"
+#
+# -Wno-invalid-constexpr covers Runtime/Core/Public/UObject/NameTypes.h, which uses offsetof in a
+# constexpr that clang rejects; the engine header is not ours to change.
+#
+# The response file UBT writes supplies the engine's own standard. ExtraArgs pins C++20 because the
+# 5.5+ headers need it; the defines and include paths still come from the response file, so this
+# analyses the same inputs as the real build. Clang 19.1.5 from the Visual Studio LLVM toolset is
+# what the generated database points at, which is newer than the engine's preferred 18.1.3 - expect
+# new-in-19 findings.
+---
+Checks: >
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-macro-parentheses,
+  -bugprone-reserved-identifier,
+  performance-*,
+  -performance-enum-size,
+  -performance-no-int-to-ptr,
+  -performance-noexcept-move-constructor,
+  -performance-noexcept-destructor,
+  -performance-unnecessary-value-param,
+  portability-*,
+  clang-analyzer-core.*,
+  clang-analyzer-cplusplus.*,
+  clang-analyzer-deadcode.*,
+  clang-analyzer-nullability.*,
+  clang-analyzer-security.*,
+  clang-analyzer-unix.*,
+  modernize-use-override,
+  readability-make-member-function-const,
+  readability-non-const-parameter
+ExtraArgs:
+  - /std:c++20
+WarningsAsErrors: ''
+HeaderFilterRegex: '(Plugins[\\/]+BlueprintInspector[\\/]+Source[\\/]+BlueprintInspector[\\/]+)'
+FormatStyle: none
+UseColor: false
+SystemHeaders: false

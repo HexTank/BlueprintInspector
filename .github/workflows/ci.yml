@@ -1,0 +1,295 @@
+name: CI
+
+# Engine legs (self-hosted): Epic's licence agreement means neither UE 4.25 nor 5.8 can be installed on a
+# GitHub-hosted runner, so the plugin jobs need a Windows runner that already has the engines and a host
+# project:
+#   - engines under D:\UnrealEngine\UE_<version>, or set BPI_ENGINE_ROOT / UE_ROOT on the runner;
+#   - a host project via BPI_HOST_PROJECT (with the plugin installed under Plugins\BlueprintInspector);
+#   - runner labels: self-hosted, windows, x64, unreal;
+#   - port 19021 free and no editor running, because the DAP tests own that port.
+# Those legs stay switched off until the repository variable ENABLE_ENGINE_CI is set to "true"; without a
+# runner they would otherwise sit queued on every pull request. When they are on, they refuse fork pull
+# requests: a self-hosted runner must never execute untrusted code.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+  pull_request:
+    paths-ignore:
+      - '**/*.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scripts:
+    name: Scripts parse
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Parse the PowerShell entry points
+        shell: pwsh
+        run: |
+          $files = @('Build.ps1')
+          $files += Get-ChildItem -Path 'Scripts' -Filter '*.ps1' -File | ForEach-Object { "Scripts/$($_.Name)" }
+          $failed = $false
+          foreach ($file in $files) {
+            $tokens = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path -LiteralPath $file).Path, [ref]$tokens, [ref]$errors) | Out-Null
+            if (-not $errors) {
+              Write-Host "$file parses"
+              continue
+            }
+            foreach ($problem in $errors) {
+              Write-Host "::error file=$file,line=$($problem.Extent.StartLineNumber)::$($problem.Message)"
+            }
+            $failed = $true
+          }
+          if ($failed) { exit 1 }
+
+  vsix:
+    name: Extension (VSIX)
+    needs: scripts
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: VSCodeExtension/Extension
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: VSCodeExtension/Extension/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Test the extension logic
+        run: npm test
+      - name: Compile and package
+        run: npm run package:vsix
+      - name: Upload the VSIX
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: blueprint-inspector-vsix
+          path: VSCodeExtension/Extension/*.vsix
+          if-no-files-found: error
+          retention-days: 14
+
+  # Eight explicit legs rather than a matrix: a matrix value is never expanded for a job skipped by its
+  # `if`, so a matrix job would sit in the checks list as "Plugin UE ${{ matrix.engine }}" until a
+  # runner exists. They chain through `needs` so the machine-global host project, its intermediates and
+  # port 19021 are used one leg at a time.
+  plugin-425:
+    name: Plugin UE 4.25
+    needs: scripts
+    if: >-
+      vars.ENABLE_ENGINE_CI == 'true' &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: [self-hosted, windows, x64, unreal]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Build and run the suite
+        # The self-hosted runner has Windows PowerShell 5.1 only, and Run-CiLeg.ps1 declares
+        # #Requires -Version 5.1; `pwsh` is not installed there.
+        shell: powershell
+        run: ./Scripts/Run-CiLeg.ps1 -Engine '4.25' -LogPath "${{ runner.temp }}/suite-ue-4.25.log"
+      - name: Upload the suite log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: suite-log-ue-4.25
+          path: ${{ runner.temp }}/suite-ue-4.25.log
+          if-no-files-found: warn
+          retention-days: 14
+
+  plugin-427:
+    name: Plugin UE 4.27
+    needs: [scripts, plugin-425]
+    if: >-
+      vars.ENABLE_ENGINE_CI == 'true' &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: [self-hosted, windows, x64, unreal]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Build and run the suite
+        # The self-hosted runner has Windows PowerShell 5.1 only, and Run-CiLeg.ps1 declares
+        # #Requires -Version 5.1; `pwsh` is not installed there.
+        shell: powershell
+        run: ./Scripts/Run-CiLeg.ps1 -Engine '4.27' -LogPath "${{ runner.temp }}/suite-ue-4.27.log"
+      - name: Upload the suite log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: suite-log-ue-4.27
+          path: ${{ runner.temp }}/suite-ue-4.27.log
+          if-no-files-found: warn
+          retention-days: 14
+
+  plugin-53:
+    name: Plugin UE 5.3
+    needs: [scripts, plugin-427]
+    if: >-
+      vars.ENABLE_ENGINE_CI == 'true' &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: [self-hosted, windows, x64, unreal]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Build and run the suite
+        # The self-hosted runner has Windows PowerShell 5.1 only, and Run-CiLeg.ps1 declares
+        # #Requires -Version 5.1; `pwsh` is not installed there.
+        shell: powershell
+        run: ./Scripts/Run-CiLeg.ps1 -Engine '5.3' -LogPath "${{ runner.temp }}/suite-ue-5.3.log"
+      - name: Upload the suite log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: suite-log-ue-5.3
+          path: ${{ runner.temp }}/suite-ue-5.3.log
+          if-no-files-found: warn
+          retention-days: 14
+
+  plugin-54:
+    name: Plugin UE 5.4
+    needs: [scripts, plugin-53]
+    if: >-
+      vars.ENABLE_ENGINE_CI == 'true' &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: [self-hosted, windows, x64, unreal]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Build and run the suite
+        # The self-hosted runner has Windows PowerShell 5.1 only, and Run-CiLeg.ps1 declares
+        # #Requires -Version 5.1; `pwsh` is not installed there.
+        shell: powershell
+        run: ./Scripts/Run-CiLeg.ps1 -Engine '5.4' -LogPath "${{ runner.temp }}/suite-ue-5.4.log"
+      - name: Upload the suite log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: suite-log-ue-5.4
+          path: ${{ runner.temp }}/suite-ue-5.4.log
+          if-no-files-found: warn
+          retention-days: 14
+
+  plugin-55:
+    name: Plugin UE 5.5
+    needs: [scripts, plugin-54]
+    if: >-
+      vars.ENABLE_ENGINE_CI == 'true' &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: [self-hosted, windows, x64, unreal]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Build and run the suite
+        # The self-hosted runner has Windows PowerShell 5.1 only, and Run-CiLeg.ps1 declares
+        # #Requires -Version 5.1; `pwsh` is not installed there.
+        shell: powershell
+        run: ./Scripts/Run-CiLeg.ps1 -Engine '5.5' -LogPath "${{ runner.temp }}/suite-ue-5.5.log"
+      - name: Upload the suite log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: suite-log-ue-5.5
+          path: ${{ runner.temp }}/suite-ue-5.5.log
+          if-no-files-found: warn
+          retention-days: 14
+
+  plugin-56:
+    name: Plugin UE 5.6
+    needs: [scripts, plugin-55]
+    if: >-
+      vars.ENABLE_ENGINE_CI == 'true' &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: [self-hosted, windows, x64, unreal]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Build and run the suite
+        # The self-hosted runner has Windows PowerShell 5.1 only, and Run-CiLeg.ps1 declares
+        # #Requires -Version 5.1; `pwsh` is not installed there.
+        shell: powershell
+        run: ./Scripts/Run-CiLeg.ps1 -Engine '5.6' -LogPath "${{ runner.temp }}/suite-ue-5.6.log"
+      - name: Upload the suite log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: suite-log-ue-5.6
+          path: ${{ runner.temp }}/suite-ue-5.6.log
+          if-no-files-found: warn
+          retention-days: 14
+
+  plugin-57:
+    name: Plugin UE 5.7
+    needs: [scripts, plugin-56]
+    if: >-
+      vars.ENABLE_ENGINE_CI == 'true' &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: [self-hosted, windows, x64, unreal]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Build and run the suite
+        # The self-hosted runner has Windows PowerShell 5.1 only, and Run-CiLeg.ps1 declares
+        # #Requires -Version 5.1; `pwsh` is not installed there.
+        shell: powershell
+        run: ./Scripts/Run-CiLeg.ps1 -Engine '5.7' -LogPath "${{ runner.temp }}/suite-ue-5.7.log"
+      - name: Upload the suite log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: suite-log-ue-5.7
+          path: ${{ runner.temp }}/suite-ue-5.7.log
+          if-no-files-found: warn
+          retention-days: 14
+
+  plugin-58:
+    name: Plugin UE 5.8
+    needs: [scripts, plugin-57]
+    if: >-
+      vars.ENABLE_ENGINE_CI == 'true' &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: [self-hosted, windows, x64, unreal]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Build and run the suite
+        # The self-hosted runner has Windows PowerShell 5.1 only, and Run-CiLeg.ps1 declares
+        # #Requires -Version 5.1; `pwsh` is not installed there.
+        shell: powershell
+        run: ./Scripts/Run-CiLeg.ps1 -Engine '5.8' -LogPath "${{ runner.temp }}/suite-ue-5.8.log"
+      - name: Upload the suite log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: suite-log-ue-5.8
+          path: ${{ runner.temp }}/suite-ue-5.8.log
+          if-no-files-found: warn
+          retention-days: 14
+
+  plugin-game-58:
+    name: Plugin game target UE 5.8
+    needs: [scripts, plugin-58]
+    if: >-
+      vars.ENABLE_ENGINE_CI == 'true' &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: [self-hosted, windows, x64, unreal]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Build into a game target and run the suite
+        # An editor target compiles the plugin with WITH_EDITOR on, and packaging builds the game target
+        # with it off. An editor-only API shipped past every leg this way on 2026-11-16.
+        shell: powershell
+        run: ./Scripts/Run-CiLeg.ps1 -Engine '5.8' -BuildGameTarget -LogPath "${{ runner.temp }}/suite-game-5.8.log"
+      - name: Upload the suite log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: suite-log-game-5.8
+          path: ${{ runner.temp }}/suite-game-5.8.log
+          if-no-files-found: warn
+          retention-days: 14

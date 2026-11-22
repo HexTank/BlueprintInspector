@@ -1,0 +1,11 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to Blueprint Inspector server",
+      "type": "blueprint-inspector",
+      "request": "launch",
+      "debugServer": 19021
+    }
+  ]
+}

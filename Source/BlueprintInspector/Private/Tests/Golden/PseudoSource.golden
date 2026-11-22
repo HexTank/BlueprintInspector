@@ -1,0 +1,605 @@
+# BlueprintInspector pseudo-source text golden.
+# Regenerate with -BlueprintGoldenUpdate, then review the diff before committing.
+# Each section is "===== Function =====" followed by that function's exact render.
+===== arrayconst_paramdefault =====
+arrayconst_paramdefault()
+{
+	DefaultArray(Temp_int_Variable, this);
+}
+===== call_selfarg =====
+call_selfarg()
+{
+	UOpcodeProbeHost::TakeCaller(this, 7);
+}
+===== callmath_abs_int =====
+callmath_abs_int()
+{
+	CallFunc_Abs_Int_ReturnValue = UKismetMathLibrary::Abs_Int(-5);
+	IntVar = CallFunc_Abs_Int_ReturnValue;
+}
+===== callmath_add =====
+callmath_add()
+{
+	CallFunc_Add_DoubleDouble_ReturnValue = UKismetMathLibrary::Add_DoubleDouble(1.0000, 2.0000);
+	RealVar = CallFunc_Add_DoubleDouble_ReturnValue;
+}
+===== cast_crossinterface =====
+cast_crossinterface()
+{
+	K2Node_DynamicCast_AsBPI_Probe_B = Cast<IBPI_ProbeB_C>(InterfaceVar);
+	K2Node_DynamicCast_bSuccess = K2Node_DynamicCast_AsBPI_Probe_B != nullptr;
+	if (K2Node_DynamicCast_bSuccess)
+	{
+		InterfaceBVar = K2Node_DynamicCast_AsBPI_Probe_B;
+	}
+}
+===== cast_float_double =====
+cast_float_double()
+{
+	CallFunc_GetSinglePrecision_ReturnValue = UOpcodeProbeHost::GetSinglePrecision();
+	K2Node_VariableSet_RealVar_ImplicitCast = Cast<double>(CallFunc_GetSinglePrecision_ReturnValue);
+	RealVar = K2Node_VariableSet_RealVar_ImplicitCast;
+}
+===== cast_impure =====
+cast_impure()
+{
+	K2Node_DynamicCast_AsBP_Probe_Cast_Target = Cast<ABP_ProbeCastTarget_C>(ActorVar);
+	K2Node_DynamicCast_bSuccess = K2Node_DynamicCast_AsBP_Probe_Cast_Target != nullptr;
+	if (!K2Node_DynamicCast_bSuccess)
+	{
+		IntVar = 0;
+	}
+	else
+	{
+		ObjectVar = K2Node_DynamicCast_AsBP_Probe_Cast_Target;
+	}
+}
+===== cast_interface_to_object =====
+cast_interface_to_object()
+{
+	K2Node_DynamicCast_AsBP_Probe_Cast_Target = Cast<ABP_ProbeCastTarget_C>(InterfaceVar);
+	K2Node_DynamicCast_bSuccess = K2Node_DynamicCast_AsBP_Probe_Cast_Target != nullptr;
+	if (K2Node_DynamicCast_bSuccess)
+	{
+		ObjectVar = K2Node_DynamicCast_AsBP_Probe_Cast_Target;
+	}
+}
+===== cast_metacast =====
+cast_metacast()
+{
+	K2Node_ClassDynamicCast_AsBP_Probe_Cast_Target = Cast<ABP_ProbeCastTarget_C>(ClassVar);
+	K2Node_ClassDynamicCast_bSuccess = K2Node_ClassDynamicCast_AsBP_Probe_Cast_Target != nullptr;
+	if (K2Node_ClassDynamicCast_bSuccess)
+	{
+		ClassVar = K2Node_ClassDynamicCast_AsBP_Probe_Cast_Target;
+	}
+}
+===== cast_objecttointerface =====
+cast_objecttointerface()
+{
+	K2Node_DynamicCast_AsBPI_Probe_A = Cast<IBPI_ProbeA_C>(ActorVar);
+	K2Node_DynamicCast_bSuccess = K2Node_DynamicCast_AsBPI_Probe_A != nullptr;
+	if (K2Node_DynamicCast_bSuccess)
+	{
+		InterfaceVar = K2Node_DynamicCast_AsBPI_Probe_A;
+	}
+}
+===== cast_pure =====
+cast_pure()
+{
+	K2Node_DynamicCast_AsBP_Probe_Cast_Target = Cast<ABP_ProbeCastTarget_C>(ActorVar);
+	K2Node_DynamicCast_bSuccess = K2Node_DynamicCast_AsBP_Probe_Cast_Target != nullptr;
+	if (K2Node_DynamicCast_bSuccess)
+	{
+		ObjectVar = K2Node_DynamicCast_AsBP_Probe_Cast_Target;
+	}
+}
+===== classcontext_getclassdefaults =====
+classcontext_getclassdefaults()
+{
+	IntVar = ProbeInt;
+}
+===== const_byte =====
+const_byte()
+{
+	Echo_Byte(200, this);
+}
+===== const_double =====
+const_double()
+{
+	Echo_Double(0.5000, this);
+}
+===== const_float =====
+const_float()
+{
+	UOpcodeProbeHost::TakeFloat(0.0000);
+}
+===== const_int =====
+const_int()
+{
+	Echo_Int(-7, this);
+}
+===== const_int64 =====
+const_int64()
+{
+	Echo_Int64(9007199254740993, this);
+}
+===== const_name =====
+const_name()
+{
+	Echo_Name("ProbeName", this);
+}
+===== const_object =====
+const_object()
+{
+	ObjectVar = M_Probe_const_object_MERGED_RefProperty;
+}
+===== const_rotator =====
+const_rotator()
+{
+	Echo_Rotator(FRotator(0.0000, 0.0000, 0.0000), this);
+}
+===== const_softobject =====
+const_softobject()
+{
+	SoftRef("/Temp/BlueprintInspectorFixture/M_Probe.M_Probe", this);
+}
+===== const_string_ascii =====
+const_string_ascii()
+{
+	Echo_String("probe", this);
+}
+===== const_string_unicode =====
+const_string_unicode()
+{
+	Echo_UnicodeString("héllo", this);
+}
+===== const_struct =====
+const_struct()
+{
+	DefaultStruct(S_ProbeContainers(false, TArray<int32>{1, 2, 3}, TSet<FName>{"Alpha", "Beta"}, TMap<int32, FName>{{1, "Alpha"}, {2, "Beta"}}), this);
+}
+===== const_text_localized =====
+const_text_localized()
+{
+	Echo_Text("Probe text", this);
+}
+===== const_transform =====
+const_transform()
+{
+	Echo_Transform(FTransform(T=(0.0000, 0.0000, 0.0000), R=(0.0000, 0.0000, 0.0000), S=(1.0000, 1.0000, 1.0000)), this);
+}
+===== const_vector =====
+const_vector()
+{
+	Echo_Vector(FVector(1.0000, 2.0000, 3.0000), this);
+}
+===== context_failsilent =====
+context_failsilent()
+{
+	ActorVar->SetActorScale3D(FVector(1.0000, 1.0000, 1.0000));
+}
+===== context_getactorlocation =====
+context_getactorlocation()
+{
+	CallFunc_K2_GetActorLocation_ReturnValue = ActorVar->K2_GetActorLocation();
+	VectorVar = CallFunc_K2_GetActorLocation_ReturnValue;
+}
+===== context_output_lvalue =====
+context_output_lvalue()
+{
+	CastTargetVar->ProbeInt = 7;
+}
+===== delegate_addelegate =====
+delegate_addelegate()
+{
+	K2Node_CreateDelegate_OutputDelegate.Bind(this, "F_ProbeDelegateHandler");
+	OnProbeMulticast.Add(K2Node_CreateDelegate_OutputDelegate);
+}
+===== delegate_callmulticast =====
+delegate_callmulticast()
+{
+	OnProbeMulticast.Broadcast(7);
+}
+===== delegate_cleardelegate =====
+delegate_cleardelegate()
+{
+	OnProbeMulticast.Clear();
+}
+===== delegate_createdelegate =====
+delegate_createdelegate()
+{
+	K2Node_CreateDelegate_OutputDelegate.Bind(this, "F_ProbeDelegateHandler");
+	SingleDelegateVar = K2Node_CreateDelegate_OutputDelegate;
+}
+===== delegate_instance =====
+delegate_instance()
+{
+	SingleDelegate(FScriptDelegate{"None"}, this);
+}
+===== delegate_removedelegate =====
+delegate_removedelegate()
+{
+	K2Node_CreateDelegate_OutputDelegate.Bind(this, "F_ProbeDelegateHandler");
+	OnProbeMulticast.Remove(K2Node_CreateDelegate_OutputDelegate);
+}
+===== E_Any =====
+E_Any()
+{
+	ExecuteUbergraph_BP_OpcodeDemo_All(76);
+}
+===== E_WithDataOut =====
+E_WithDataOut(int32 Out)
+{
+	K2Node_CustomEvent_Out = Out;
+	ExecuteUbergraph_BP_OpcodeDemo_All(40);
+}
+===== F_finalcall_parent =====
+F_finalcall_parent()
+{
+	F_ParentTarget(7);
+}
+===== flow_arraygetbyref =====
+flow_arraygetbyref()
+{
+	IntVar = ArrayVar, 1;
+}
+===== flow_branch =====
+flow_branch()
+{
+	if (!BoolVar)
+	{
+		IntVar = 0;
+	}
+	else
+	{
+		IntVar = 0;
+	}
+}
+===== flow_break =====
+flow_break()
+{
+	IntVar = 0;
+	BoolVar = true;
+	while (BoolVar)
+	{
+		CallFunc_Add_IntInt_ReturnValue = UKismetMathLibrary::Add_IntInt(IntVar, 1);
+		IntVar = CallFunc_Add_IntInt_ReturnValue;
+		CallFunc_EqualEqual_IntInt_ReturnValue = UKismetMathLibrary::EqualEqual_IntInt(IntVar, 2);
+		if (!CallFunc_EqualEqual_IntInt_ReturnValue)
+		{
+			CallFunc_Less_IntInt_ReturnValue = UKismetMathLibrary::Less_IntInt(IntVar, 3);
+			BoolVar = CallFunc_Less_IntInt_ReturnValue;
+		}
+		else
+		{
+			break;
+		}
+	}
+}
+===== flow_continue =====
+flow_continue()
+{
+	IntVar = 0;
+	BoolVar = true;
+	while (BoolVar)
+	{
+		CallFunc_Add_IntInt_ReturnValue = UKismetMathLibrary::Add_IntInt(IntVar, 1);
+		IntVar = CallFunc_Add_IntInt_ReturnValue;
+		CallFunc_EqualEqual_IntInt_ReturnValue = UKismetMathLibrary::EqualEqual_IntInt(IntVar, 1);
+		if (!CallFunc_EqualEqual_IntInt_ReturnValue)
+		{
+			CallFunc_Less_IntInt_ReturnValue = UKismetMathLibrary::Less_IntInt(IntVar, 3);
+			BoolVar = CallFunc_Less_IntInt_ReturnValue;
+		}
+		else
+		{
+			continue;
+		}
+	}
+}
+===== flow_do_while =====
+flow_do_while()
+{
+	IntVar = 0;
+	do
+	{
+		CallFunc_Add_IntInt_ReturnValue = UKismetMathLibrary::Add_IntInt(IntVar, 1);
+		IntVar = CallFunc_Add_IntInt_ReturnValue;
+		CallFunc_Less_IntInt_ReturnValue = UKismetMathLibrary::Less_IntInt(IntVar, 3);
+		BoolVar = CallFunc_Less_IntInt_ReturnValue;
+	}
+	while (BoolVar);
+}
+===== flow_nested_loops =====
+flow_nested_loops()
+{
+	IntVar = 0;
+	LoopFlag = true;
+	while (LoopFlag)
+	{
+		BoolVar = true;
+		while (BoolVar)
+		{
+			CallFunc_Add_IntInt_ReturnValue = UKismetMathLibrary::Add_IntInt(IntVar, 1);
+			IntVar = CallFunc_Add_IntInt_ReturnValue;
+			CallFunc_EqualEqual_IntInt_ReturnValue_1 = UKismetMathLibrary::EqualEqual_IntInt(IntVar, 1);
+			if (!CallFunc_EqualEqual_IntInt_ReturnValue_1)
+			{
+				CallFunc_EqualEqual_IntInt_ReturnValue = UKismetMathLibrary::EqualEqual_IntInt(IntVar, 2);
+				if (!CallFunc_EqualEqual_IntInt_ReturnValue)
+				{
+					continue;
+				}
+				else
+				{
+					break;
+				}
+			}
+			else
+			{
+				continue;
+			}
+		}
+		LoopFlag = false;
+	}
+}
+===== flow_popexecutionflowifnot =====
+flow_popexecutionflowifnot()
+{
+	// Sequence 0.
+	IntVar = 0;
+	// Sequence 1.
+	if (true)
+	{
+	}
+	// Sequence 2.
+}
+===== flow_return_value =====
+flow_return_value()
+{
+	ReturnValue = 7;
+	return ReturnValue;
+}
+===== flow_sequence =====
+flow_sequence()
+{
+	// Sequence 0.
+	IntVar = 0;
+	// Sequence 1.
+	IntVar = 0;
+	// Sequence 2.
+}
+===== flow_switch =====
+flow_switch()
+{
+	K2Node_SwitchInteger_CmpSuccess = UKismetMathLibrary::NotEqual_IntInt(IntVar, 0);
+	if (!K2Node_SwitchInteger_CmpSuccess)
+	{
+		RealVar = 0.0000;
+	}
+	else
+	{
+		K2Node_SwitchInteger_CmpSuccess = UKismetMathLibrary::NotEqual_IntInt(IntVar, 1);
+		if (!K2Node_SwitchInteger_CmpSuccess)
+		{
+			RealVar = 1.0000;
+		}
+		else
+		{
+			RealVar = 2.0000;
+		}
+	}
+}
+===== flow_switchvalue =====
+flow_switchvalue()
+{
+	Temp_int_Variable_1 = 2;
+	Temp_int_Variable_2 = 1;
+	Temp_int_Variable = IntVar;
+	IntVar = [&Temp_int_Variable]()
+	{
+		switch (Temp_int_Variable)
+		{
+			case 0:
+				return Temp_int_Variable_2;
+			case 1:
+				return Temp_int_Variable_1;
+			default:
+				return K2Node_Select_Default;
+		}
+	}();
+}
+===== flow_while =====
+flow_while()
+{
+	IntVar = 0;
+	while (UKismetMathLibrary::Less_IntInt(IntVar, 3))
+	{
+		CallFunc_Add_IntInt_ReturnValue = UKismetMathLibrary::Add_IntInt(IntVar, 1);
+		IntVar = CallFunc_Add_IntInt_ReturnValue;
+	}
+}
+===== interfacecontext_messagecall =====
+interfacecontext_messagecall()
+{
+	CallFunc_Conv_InterfaceToObject_ReturnValue = UKismetSystemLibrary::Conv_InterfaceToObject(InterfaceVar);
+	K2Node_DynamicCast_AsBPI_Probe_A = Cast<IBPI_ProbeA_C>(CallFunc_Conv_InterfaceToObject_ReturnValue);
+	K2Node_DynamicCast_bSuccess = K2Node_DynamicCast_AsBPI_Probe_A != nullptr;
+	if (K2Node_DynamicCast_bSuccess)
+	{
+		K2Node_DynamicCast_AsBPI_Probe_A->IProbeFunc(7);
+	}
+}
+===== let_array =====
+let_array()
+{
+	K2Node_MakeArray_Array = TArray<int32>{1, 2};
+	ArrayVar = K2Node_MakeArray_Array;
+}
+===== let_bool =====
+let_bool()
+{
+	BoolVar = true;
+}
+===== let_byte =====
+let_byte()
+{
+	ByteVar = 200;
+}
+===== let_class =====
+let_class()
+{
+	ClassVar = BP_ProbeCastTarget_C;
+}
+===== let_delegate =====
+let_delegate()
+{
+	K2Node_CreateDelegate_OutputDelegate.Bind(this, "F_ProbeDelegateHandler");
+	SingleDelegateVar = K2Node_CreateDelegate_OutputDelegate;
+}
+===== let_enum =====
+let_enum()
+{
+	EnumVar = Two;
+}
+===== let_int =====
+let_int()
+{
+	IntVar = 7;
+}
+===== let_int64 =====
+let_int64()
+{
+	Int64Var = 9007199254740993;
+}
+===== let_name =====
+let_name()
+{
+	NameVar = "ProbeName";
+}
+===== let_obj =====
+let_obj()
+{
+	ObjectVar = M_Probe;
+}
+===== let_real =====
+let_real()
+{
+	RealVar = 0.5000;
+}
+===== let_rotator =====
+let_rotator()
+{
+	RotatorVar = FRotator(0.0000, 90.0000, 0.0000);
+}
+===== let_softobj =====
+let_softobj()
+{
+	SoftObjVar = "/Temp/BlueprintInspectorFixture/M_Probe.M_Probe";
+}
+===== let_string_ascii =====
+let_string_ascii()
+{
+	StringVar = "probe";
+}
+===== let_string_unicode =====
+let_string_unicode()
+{
+	StringVar = "héllo";
+}
+===== let_struct =====
+let_struct()
+{
+	StructVar = S_ProbeStruct(false, 1, 2.0000, "probe", nullptr, S_ProbeNested(false, true));
+}
+===== let_text =====
+let_text()
+{
+	TextVar = "Invariant text";
+}
+===== let_transform =====
+let_transform()
+{
+	TransformVar = FTransform(T=(0.0000, 0.0000, 0.0000), R=(0.0000, 0.0000, 0.0000), S=(1.0000, 1.0000, 1.0000));
+}
+===== let_vector =====
+let_vector()
+{
+	VectorVar = FVector(1.0000, 2.0000, 3.0000);
+}
+===== let_weakobj =====
+let_weakobj()
+{
+	WeakObjVar = ActorVar;
+}
+===== localfinal_bpfunc =====
+localfinal_bpfunc()
+{
+	F_ProbeLocalFunc();
+}
+===== localvirtual_bpfunc =====
+localvirtual_bpfunc()
+{
+	F_ProbeOverridable();
+}
+===== none_interface =====
+none_interface()
+{
+	InterfaceVar = EExprToken(0x2D);
+}
+===== none_object =====
+none_object()
+{
+	ObjectVar = nullptr;
+}
+===== self_node =====
+self_node()
+{
+	ObjectVar = this;
+}
+===== setarray_makearray =====
+setarray_makearray()
+{
+	K2Node_MakeArray_Array = TArray<int32>{1, 2};
+	ArrayVar = K2Node_MakeArray_Array;
+}
+===== setmap_makemap =====
+setmap_makemap()
+{
+	K2Node_MakeMap_Map = TMap<int32, FName>{{1, "Alpha"}, {2, "Beta"}};
+	MapVar = K2Node_MakeMap_Map;
+}
+===== setset_makeset =====
+setset_makeset()
+{
+	K2Node_MakeSet_Set = TSet<FName>{"Alpha", "Beta"};
+	SetVar = K2Node_MakeSet_Set;
+}
+===== structconst_containers =====
+structconst_containers()
+{
+	DefaultStruct(S_ProbeContainers(false, TArray<int32>{1, 2, 3}, TSet<FName>{"Alpha", "Beta"}, TMap<int32, FName>{{1, "Alpha"}, {2, "Beta"}}), this);
+}
+===== var_instance =====
+var_instance()
+{
+	IntVar = IntVar;
+}
+===== var_local =====
+var_local(int32 Input)
+{
+	IntVar = Input;
+}
+===== var_localout =====
+var_localout()
+{
+	ReturnValue = 0;
+	return ReturnValue;
+}
+===== virtual_function =====
+virtual_function()
+{
+	CallFunc_GetVelocity_ReturnValue = GetVelocity();
+	VectorVar = CallFunc_GetVelocity_ReturnValue;
+}
