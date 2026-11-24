@@ -61,8 +61,10 @@ inline void CollectStatements(const FBlueprintNode::FWireVariant& InWire, TArray
 }
 
 /**
- * The first statement both arms of a branch reach, or false when they never converge. Render order decides:
- * the first statement the false arm reaches that the true arm also reaches is the merge.
+ * The join of a branch: the first statement both arms reach where neither arm can end its flow before
+ * reaching it. Render order decides, so the first statement the false arm reaches that the true arm also
+ * reaches and that is on every path from the branch is the merge. A block both arms can jump into is not a
+ * join when an arm can also leave without it.
  *
  * Requires the branch wire layout the disassembler produces: OutputWires[0] is the false arm and
  * OutputWires[1] is the true arm. Returns false for a node with fewer than two wires or when a wire holds
