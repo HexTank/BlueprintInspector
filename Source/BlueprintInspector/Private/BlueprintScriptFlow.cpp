@@ -2,6 +2,57 @@
 
 namespace BlueprintScriptFlow
 {
+namespace
+{
+bool ReachesExitBefore(const FBlueprintNode::FWireVariant& InWire, const FFlowKey& InMerge)
+{
+    if (!InWire.IsType<FBlueprintNode*>())
+    {
+        return false;
+    }
+
+    TSet<const FBlueprintNode*> Visited;
+    TArray<const FBlueprintNode*> Pending;
+    Pending.Add(InWire.Get<FBlueprintNode*>());
+
+    while (Pending.Num() > 0)
+    {
+        const FBlueprintNode* const Node = Pending.Pop(BI_POP_NO_SHRINK);
+        if (Node == nullptr || Visited.Contains(Node) || SameKey(*Node, InMerge))
+        {
+            continue;
+        }
+        Visited.Add(Node);
+
+        bool bContinues = Node->BackEdgeTarget != INDEX_NONE;
+        for (const FBlueprintNode::FWireVariant& Wire : Node->OutputWires)
+        {
+            const FBlueprintNode* const* const Child = Wire.TryGet<FBlueprintNode*>();
+            if (Child != nullptr && *Child != nullptr)
+            {
+                bContinues = true;
+                Pending.Add(*Child);
+            }
+        }
+
+        if (!bContinues)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// The fallthrough landing of an EX_JumpIfNot: the opcode byte plus one CodeSkipSizeType operand. If
+// the compiler's layout changes, this offset (and every latch that compares against it) is wrong, so it
+// is kept in one helper rather than inlined at the call sites.
+int64 GetFallthroughLanding(const FBlueprintNode& InBranch)
+{
+    return InBranch.ScriptIndex + 1 + static_cast<int64>(sizeof(CodeSkipSizeType));
+}
+} // namespace
+
 FFlowKey GetKey(const FBlueprintNode& InNode)
 {
     return FFlowKey{InNode.FunctionKey, InNode.ScriptIndex};
@@ -100,12 +151,13 @@ bool FindMerge(const FBlueprintNode& InBranch, const FBlueprintNode*& OutMerge, 
     for (const FBlueprintNode* const Node : FalseArm)
     {
         const FFlowKey Key = GetKey(*Node);
-        if (TrueKeys.Contains(Key))
+        if (!TrueKeys.Contains(Key) || ReachesExitBefore(InBranch.OutputWires[0], Key) || ReachesExitBefore(InBranch.OutputWires[1], Key))
         {
-            OutMerge = Node;
-            OutKey = Key;
-            return true;
+            continue;
         }
+        OutMerge = Node;
+        OutKey = Key;
+        return true;
     }
 
     return false;
@@ -116,17 +168,6 @@ bool IsLoopHeader(const FBlueprintNode& InBranch)
     FLoop Loop;
     return FindWhileLoop(InBranch, Loop);
 }
-
-namespace
-{
-// The fallthrough landing of an EX_JumpIfNot: the opcode byte plus one CodeSkipSizeType operand. If
-// the compiler's layout changes, this offset (and every latch that compares against it) is wrong, so it
-// is kept in one helper rather than inlined at the call sites.
-int64 GetFallthroughLanding(const FBlueprintNode& InBranch)
-{
-    return InBranch.ScriptIndex + 1 + static_cast<int64>(sizeof(CodeSkipSizeType));
-}
-} // namespace
 
 bool FindComputedWhileLoop(const FBlueprintNode& InCondition, FLoop& OutLoop)
 {

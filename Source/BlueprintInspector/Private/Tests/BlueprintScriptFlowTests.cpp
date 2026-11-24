@@ -265,4 +265,56 @@ bool FBlueprintScriptFlowDoWhileTest::RunTest(const FString& Parameters)
     return true;
 }
 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FBlueprintScriptFlowJoinTest, "BlueprintInspector.Flow.RejectsAMergeAnArmCanSkip", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FBlueprintScriptFlowJoinTest::RunTest(const FString& Parameters)
+{
+    using namespace BlueprintScriptFlowTests;
+    namespace Flow = BlueprintScriptFlow;
+
+    FBlueprintNode Branch = MakeNode(EX_JumpIfNot, 0);
+    FBlueprintNode Shared = MakeNode(EX_IntConst, 10);
+    FBlueprintNode SharedTail = MakeNode(EX_IntConst, 20);
+    FBlueprintNode Probe = MakeNode(EX_IntConst, 40);
+    FBlueprintNode Inner = MakeNode(EX_JumpIfNot, 50);
+    FBlueprintNode Join = MakeNode(EX_IntConst, 60);
+    FBlueprintNode Exit = MakeNode(EX_Return, 70);
+
+    Connect(Branch, Shared);
+    Connect(Branch, Probe);
+    Connect(Shared, SharedTail);
+    Connect(SharedTail, Join);
+    Connect(Probe, Inner);
+    Connect(Inner, Shared);
+    Connect(Inner, Join);
+    Connect(Join, Exit);
+
+    const FBlueprintNode* Merge = nullptr;
+    Flow::FFlowKey MergeKey;
+    TestTrue(TEXT("the statement after both arms is the join"), Flow::FindMerge(Branch, Merge, MergeKey));
+    TestTrue(TEXT("the shared block both arms jump into is not the join"), Merge == &Join);
+    TestEqual(TEXT("the join key carries its address"), MergeKey.Address, static_cast<int64>(60));
+
+    FBlueprintNode EndingBranch = MakeNode(EX_JumpIfNot, 100);
+    FBlueprintNode EndingShared = MakeNode(EX_IntConst, 110);
+    FBlueprintNode EndingProbe = MakeNode(EX_IntConst, 140);
+    FBlueprintNode EndingInner = MakeNode(EX_JumpIfNot, 150);
+    FBlueprintNode EndingJoin = MakeNode(EX_IntConst, 160);
+    FBlueprintNode EndingExit = MakeNode(EX_Return, 170);
+
+    Connect(EndingBranch, EndingShared);
+    Connect(EndingBranch, EndingProbe);
+    Connect(EndingProbe, EndingInner);
+    Connect(EndingInner, EndingShared);
+    Connect(EndingInner, EndingJoin);
+    Connect(EndingShared, EndingExit);
+
+    Merge = nullptr;
+    MergeKey.Address = 123;
+    TestFalse(TEXT("an arm that ends before the shared block leaves no join"), Flow::FindMerge(EndingBranch, Merge, MergeKey));
+    TestTrue(TEXT("a rejected join search leaves its node untouched"), Merge == nullptr);
+    TestEqual(TEXT("a rejected join search leaves the key untouched"), MergeKey.Address, static_cast<int64>(123));
+    return true;
+}
+
 #endif
