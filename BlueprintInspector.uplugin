@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 2,
-	"VersionName": "2.0.2",
+	"VersionName": "2.0.3",
 	"FriendlyName": "BlueprintInspector",
 	"Description": "A Blueprint inspector and debugger for Unreal Engine. Disassembles Blueprint bytecode into readable pseudo-source and serves it over DAP so you can set breakpoints, step and inspect variables from VS Code.",
 	"Category": "Editor",

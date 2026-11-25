@@ -4,7 +4,7 @@ BlueprintInspector is a debugger for Unreal Blueprints. It turns compiled Bluepr
 C-like source and serves it over DAP, so you can set breakpoints and step through Blueprints in
 VS Code. It works in PIE, standalone and packaged builds.
 
-Tested on UE 4.25 through 5.8. Win64 only. The current beta is 2.0.2.
+Tested on UE 4.25 through 5.8. Win64 only. The current beta is 2.0.3.
 
 ![A breakpoint in BTS_Shoot_C with the call stack and parameters in the sidebar](docs/screenshots/debugger.png)
 
